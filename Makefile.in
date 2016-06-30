@@ -1,0 +1,103 @@
+SHELL = /bin/sh
+top_srcdir = @top_srcdir@
+srcdir = @srcdir@
+VPATH = @srcdir@
+
+.SUFFIXES:
+.SUFFIXES: .c .o
+
+OPT=-g -O
+
+AR = ar
+AR_FLAGS = rc
+RANLIB = @RANLIB@
+
+CC = @CC@
+CFLAGS = -I. @CFLAGS@
+LDFLAGS = @LDFLAGS@
+LIBS = @LIBS@
+INSTALL = @INSTALL@
+prefix = @prefix@
+exec_prefix = @exec_prefix@
+bindir = $(exec_prefix)/bin
+libdir = $(prefix)/lib
+infodir = $(prefix)/info
+
+SOURCES=blib.c bgrep.c bips.c bsed.c bxxd.c bflag.c
+# DOCS=libbinmod.texi binmod.info
+MISC=configure mkinstalldirs install-sh aclocal.m4
+LIB_OBJS=blib.o
+BGREP_OBJS=bgrep.o
+BSED_OBJS=bsed.o
+BXXD_OBJS=bxxd.o
+BIPS_OBJS=bips.o
+BFLAG_OBJS=bflag.o
+BWRIT_OBJS=bwrit.o
+
+# ??? replace with your targets
+all: libbinmod.a bgrep bsed bips bxxd bwrit
+
+# ??? here I make the bindir, libdir and infodir directories; you
+# might not need all of these.  also, I assumed the names PROG and
+# libMYPROG.a for the program and library.
+install: all
+	$(top_srcdir)/mkinstalldirs $(bindir)
+	$(top_srcdir)/mkinstalldirs $(libdir)
+	$(top_srcdir)/mkinstalldirs $(infodir)
+	$(INSTALL) bgrep $(bindir)/bgrep
+	$(INSTALL) bsed  $(bindir)/bsed
+	$(INSTALL) bips  $(bindir)/bips
+	$(INSTALL) bxxd  $(bindir)/bxxd
+	$(INSTALL) bxxd  $(bindir)/bwrit
+	$(INSTALL) bxxd  $(bindir)/bflag
+	$(INSTALL) libbinmod.a $(libdir)/libbinmod.a
+#	$(INSTALL) PROG.info $(infodir)/PROG.info
+
+uninstall:
+	/bin/rm -f $(bindir)/bsed
+	/bin/rm -f $(bindir)/bgrep
+	/bin/rm -f $(bindir)/bips
+	/bin/rm -f $(bindir)/bxxd
+	/bin/rm -f $(bindir)/bflag
+	/bin/rm -f $(bindir)/bwrit
+	/bin/rm -f $(libdir)/libbinmod.a
+	/bin/rm -f $(infodir)/libbinmod.info
+
+libbinmod.a: $(LIB_OBJS)
+	/bin/rm -f libbinmod.a
+	$(AR) $(AR_FLAGS) libbinmod.a $(LIB_OBJS)
+	$(RANLIB) libbinmod.a
+
+bsed: $(BSED_OBJS) libbinmod.a
+	$(CC) $(CFLAGS) -o bsed $(BSED_OBJS) $(LIB_OBJS)
+
+bgrep: $(BGREP_OBJS) libbinmod.a
+	$(CC) $(CFLAGS) -o bgrep $(BGREP_OBJS) $(LIB_OBJS)
+
+bips: $(BIPS_OBJS) libbinmod.a
+	$(CC) $(CFLAGS) -o bips $(BIPS_OBJS) $(LIB_OBJS)
+
+bxxd: $(BXXD_OBJS) libbinmod.a
+	$(CC) $(CFLAGS) -o bxxd $(BXXD_OBJS) $(LIB_OBJS)
+
+bflag: $(BFLAG_OBJS) libbinmod.a
+	$(CC) $(CFLAGS) -o bflag $(BFLAG_OBJS) $(LIB_OBJS)
+
+bwrit: $(BWRIT_OBJS) libbinmod.a
+	$(CC) $(CFLAGS) -o bwrit $(BWRIT_OBJS) $(LIB_OBJS)
+
+clean:
+	/bin/rm -f core *.o bxxd bips bgrep bsed bflag bwrit libbinmod.a
+
+distclean: clean
+	/bin/rm -f Makefile config.h config.status config.cache config.log
+
+nuke: distclean
+	/bin/rm -fr autom4te.cache configure
+
+mostlyclean: clean
+
+maintainer-clean: clean
+
+#PROG.info: PROG.texi
+#	makeinfo PROG.texi

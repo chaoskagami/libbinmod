@@ -1,0 +1,120 @@
+libbinmod - A generic binary inspection and patching library/tools
+========================================================================
+
+0) Short installation
+1) About
+2) Goals/Motivation
+3) Structure
+4) Tool-specific info
+  4.1) bgrep
+  4.2) bsed
+  4.3) bips
+  4.4) bxxd
+
+------------------------------------------------------------------------
+0) Short Installation Instructions
+------------------------------------------------------------------------
+
+If you downloaded this source from git:
+  autoreconf -fi && ./configure && make && make install
+
+If you downloaded a release tarball:
+  ./configure && make && make install
+
+In other words, standard autoconf.
+
+------------------------------------------------------------------------
+1) About libbinmod
+------------------------------------------------------------------------
+
+libbinmod is a set of utilities for inspecting and altering binary
+files. By 'binary files', I am referring not to executables, but any
+form of data blob, executable, or otherwise. This is also pretty
+shitty and has been sitting on my HD for a while, so...yeah.
+
+These (mostly) functional tools are provided.
+
+  bgrep - Binary grep
+  bsed  - Binary stream editor (incomplete)
+  bips  - IPS patcher
+  bxxd  - Hex dumper
+  bflag - LAA flag flipper
+  bwrit - Binary insertion
+
+------------------------------------------------------------------------
+2) Goals and Motivation
+------------------------------------------------------------------------
+
+libbinmod was created out of frustration with current binary editing
+tools. Essentially, your choices now boil down to one of the following:
+
+  * A graphical hex editor
+  * xdelta3
+  * One of numerous bgrep implementations
+
+This is inadequate. For many reasons, not limited to the following:
+
+  * dd is not a good stream editor, and sed has limited usability on
+    binaries, at least safely so.
+  * Un-hexdumping is complicated by the multiple tools available.
+    There's xxd, hexdump, etc. All with different formats.
+  * xdelta is not a plaintext or readable format. It is special purpose,
+    and while it fares well, for smaller jobs a tool that operates on
+    plaintext would be nice.
+  * All of the many bgrep tools are not feature complete.
+    They might not be able to print context, display, etc.
+  * There's a lack of IPS patchers on linux.
+
+------------------------------------------------------------------------
+4) Tool-specific Information
+------------------------------------------------------------------------
+
+----- 4.1) bgrep
+
+    Binary grep isn't a terribly new concept. It is however, not handled
+    by GNU grep, and it is also done rather terribly in the numerous
+    implementations. grep's greatest strength is in the flexibility of
+    output that makes usage of the output elsewhere possible.
+
+    None of the implementations of bgrep I have tried provide this.
+
+    Not that my implementation does either, but hey. I'm trying at least.
+
+----- 4.2) bsed
+
+    Just a dump search and replace tool. Move along now. Maybe someday.
+
+----- 4.3) bips
+
+    bips is an IPS/IPS32 patcher. IPS and IPS32 are patch formats
+    commonly used in ROM hacks and game modifications. They offer no
+    contextual information, however, so once a patch is applied it
+    cannot be reverted without generating a patch backwards.
+
+    IPS is much more common than IPS32. However, it has a hard limit on
+    file size of 2^24-1 bytes, or 16M. This makes it useless on larger
+    files, which is why BPS/beat was used for Mother 3's fan translation
+    for example.
+
+    IPS32 is a variant of IPS which rather than get fancy like BPS or
+    xdelta, just fixes what broke and uses 32-bit offsets. Some of the
+    touhoumon rom hacks were distributed in this format. 2^32-1 is 4GB,
+    which is not likely to be hit since IPS has been largely obsoleted
+    already.
+
+    Additionally, there is an extension to the above used by Lunar IPS -
+    a truncation/expansion value immediately after the end. I'm unsure
+    if this can occur in IPS32; regardless, I check for a four-byte
+    value anyways.
+
+----- 4.4) bxxd
+
+    Another hexdump implementation.
+
+----- 4.5) bflag
+
+    Flips the large address flag in windows executables.
+
+----- 4.6) bwrit
+
+    Writes a value to a file. Useful as a substitute for quick hex edits.

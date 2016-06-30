@@ -1,0 +1,10 @@
+ To install this:
+
+  ./configure && make && make install
+
+ In other words, generic autoconf. If you're too lazy to run
+ these commands (seriously?), it's your lucky day. This file can be
+ executed as such: sh INSTALL
+
+ Yeah, seriously. I've deliberately started all lines with non-commands.
+ There's some syntax errors, but hey.

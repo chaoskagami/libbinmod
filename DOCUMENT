@@ -1,0 +1,25 @@
+IPS Format (general):
+
+	IPS files are patches consisting of chunks with 24-bit offsets and
+	description of bytes to write and length. They are incredibly
+	simple.
+
+	Here is what a patch would look like if you transcribed it to be
+	human readable:
+
+	PATCH
+
+	offset: 000f40
+	size: 10
+	DE AD BE EF DE AD BE EF 00 00
+
+	offset: 001267
+	size: rle
+	rle-size: 200
+	rle-byte: 50
+
+	EEOF
+
+IPS32 extension:
+
+	A rather simple extension. Offsets are 32-bit versus 24.
